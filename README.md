@@ -6,10 +6,10 @@
 开机时自动：
 - 网络检测、剩余流量查询、网速延迟和丢包检测
 - 低流量阈值告警
-- 日志记录、月度报告生成（含流量异常分析）
+- 日志记录、月度报告生成、流量异常分析
 - 全程静默无需手动操作。
 
-项目提供Python源码（.py文件，改为.pyw以静默运行）和exe（在Releases中，免于配置环境）双版本。
+通中位数绝对偏差值算法配合绝对阈值实现流量异常分析，或可解决对流量消耗速度的困惑？
 
 
 ## 三步快速使用
@@ -52,6 +52,46 @@
     ├─ 📄 network_log_YYYY-MM.txt # 当月网络使用详细日志
     └─ 📄 Report_YYYY-MM.txt # 月度流量统计与异常检测报告
 ```
+## 自定义：
+通过修改代码或配置文件（Unreleased开发中）实现自定义：
+
+MAX_RETRY: 网络连接失败重试次数
+
+RETRY_INTERVAL: 重试间隔(秒)
+
+TARGET_SSID: 校园网WiFi名称
+
+CAMPUS_URL: 校园网认证成功页面地址
+
+CAMPUS_HOST: 校园网服务器地址
+
+EXTERNAL_TEST_HOST: 公网连通性测试地址
+
+NOTICE_TIMEOUT: 系统通知显示时长(秒)
+
+LOW_FLOW_THRESHOLD_GB: 低流量告警阈值(GB)
+
+WORK_DIR_NAME: 工作目录名称
+
+PING_COUNT: 测速时发送的ping包数量
+
+LOG_ENABLED: 是否启用日志记录(关闭后不生成日志和月度报告)
+
+DEBUG_MODE: 调试模式(开启后生成详细错误报告，用于排查问题)
+
+SPEED_TEST_ENABLED: 是否启用网络测速(关闭后不检测延迟和丢包)
+
+ANOMALY_MAD_MULTIPLIER: 异常检测中位数绝对偏差倍数
+
+MIN_RECORDS_FOR_ANOMALY: 异常检测所需最少记录数
+
+ABSOLUTE_DAILY_THRESHOLD_GB: 单日流量绝对阈值(超过即判定为异常)
+
+SAFE_DAILY_FLOOR_GB: 安全流量下限(低于此值不判定为异常)
+
+OPEN_REPORT_AFTER_GENERATE: 生成月度报告后是否自动打开
+
+OPEN_WORKSPACE_ON_FIRST_RUN: 首次运行是否自动打开工作目录
 
 ## 问题：
 程序在后台静默运行，且需要等待延迟测试、开机配置等，运行时不会立即显示内容，这是正常的。如果持续超过1分钟仍未响应，请打开Debug模式（Unreleased开发中）排查问题。
