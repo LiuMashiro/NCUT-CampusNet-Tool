@@ -16,5 +16,5 @@ All notable changes to this project will be documented in this file.
 
 ### Other
 - 也许还增加了一些Bug？
-- 由于需在校内环境中调试，功能发布时间取决于学校的假期、考试安排，以及我假期的快乐生活。
-- 假期快乐！
+- 由于需要校内环境，功能仍在调试。发布时间取决于假期。
+- 赞美春假！假期快乐！
