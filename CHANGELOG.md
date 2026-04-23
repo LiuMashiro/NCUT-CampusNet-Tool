@@ -1,7 +1,7 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] 待发布
+## v1.5
 
 ### Added
 - 新增独立配置文件系统，存放于程序工作目录，支持外部直接修改参数。
@@ -9,12 +9,14 @@ All notable changes to this project will be documented in this file.
 - 增加程序启动路径检测，未放置在启动目录时自动弹出告警提示。
 - 新增 DEBUG 错误调试模式，开启后自动在工作区生成错误报告。
 - 优化首次运行与报告生成体验：首次启动自动打开工作区，月度报告生成后自动打开所在目录。
+- 图标。
+- 首次运行时的等待提示。
 
 ### Improved
 - 底层逻辑重构优化，提升运行效率。
 - 增强程序稳定性、兼容性。
+- 如果上个月无数据，不会再生成月度报告。
 
 ### Other
 - 也许还增加了一些Bug？
-- 由于需要校内环境，功能仍在调试。发布时间取决于假期。
 - 赞美春假！假期快乐！
