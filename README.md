@@ -47,12 +47,15 @@ v1.5已更新。
 
 
 ## 工作区：
-我的电脑 → 文档 → NCUT_Campus_Network_Log
+文档 → NCUT_Campus_Network_Log
 ```
-📁 我的文档 /
-└─ 📁 NCUT_Campus_Network_Log # 【工作区】日志与报告存储目录
-    ├─ 📄 network_log_YYYY-MM.txt # 当月网络使用详细日志
-    └─ 📄 Report_YYYY-MM.txt # 月度流量统计与异常检测报告
+📁 文档 /
+└─ 📁 NCUT_Campus_Network_Log          # 程序工作区
+    ├─ 📄 config.ini                    # 程序自定义配置及说明文件
+    ├─ 📄 network_log_YYYY-MM.txt       # 当月校园网日志
+    ├─ 📄 Report_YYYY-MM.txt            # 上月月度流量统计报告（含异常流量检测分析）
+    └─ 📁 debug                         # 【调试目录】仅开启DEBUG_MODE时自动创建
+        └─ 📄 error_report_时间戳.txt    # 程序运行崩溃/抓取失败时的完整错误堆栈、环境、配置诊断日志
 ```
 ## 自定义：
 通过修改代码或配置文件实现自定义：
