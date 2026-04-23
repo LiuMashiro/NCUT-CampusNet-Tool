@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - 底层逻辑重构优化，提升运行效率。
 - 增强程序稳定性、兼容性。
 - 如果上个月无数据，不会再生成月度报告。
+- 异常值下限上调为1.5GB/天。
 
 ### Other
 - 也许还增加了一些Bug？
