@@ -4,14 +4,15 @@
 学生社区中常见学生对校园网流量消耗存在疑惑，且流量查询较为不便。本程序有助于便捷、清晰掌握并规划校园网剩余流量。
 
 开机时自动：
-- 网络连接检测、剩余流量查询、网络质量检测
+- 网络连接检测、**剩余流量查询**
+- 网络质量检测（条件恶劣时警告）
 - 流量即将用尽告警
 - 日志记录、月度报告生成
-- 流量异常分析
+- **流量异常分析**
 
 全程静默无需手动操作。
 
-v1.5已更新。
+v1.7已更新。
 
 
 ## 三步快速使用
@@ -34,7 +35,7 @@ v1.5已更新。
 
 使用.py版本:
 - Python 3
-- pip install selenium plyer
+- requirements.txt中记录的库
 - Microsoft Edge（应当自带）
 
 
@@ -51,54 +52,49 @@ v1.5已更新。
 ```
 📁 文档 /
 └─ 📁 NCUT_Campus_Network_Log          # 程序工作区
-    ├─ 📄 config.ini                    # 程序自定义配置及说明文件
+    ├─ 📄 config.yaml                   # 程序自定义配置及说明文件
     ├─ 📄 network_log_YYYY-MM.txt       # 当月校园网日志
     ├─ 📄 Report_YYYY-MM.txt            # 上月月度流量统计报告（含异常流量检测分析）
     └─ 📁 debug                         # 【调试目录】仅开启DEBUG_MODE时自动创建
         └─ 📄 error_report_时间戳.txt    # 程序运行崩溃/抓取失败时的完整错误堆栈、环境、配置诊断日志
 ```
 ## 自定义：
-通过配置文件（工作区中的config.ini）实现自定义（默认值为推荐值）：
+通过配置文件（工作区中的config.yaml）实现自定义（默认值为推荐值）：
 ```
+# ==================== 基础配置 ====================
+MAX_RETRY: 5                    # 网络连接失败重试次数
+RETRY_INTERVAL: 3               # 重试间隔(秒)
+TARGET_SSID: "NCUT-AUTO"        # 校园网WiFi名称
+CAMPUS_URL: "https://ip.ncut.edu.cn/srun_portal_success?ac_id=1&theme=pro"  # 校园网认证成功页面地址
+CAMPUS_HOST: "ip.ncut.edu.cn"   # 校园网服务器地址
+EXTERNAL_TEST_HOST: "223.5.5.5" # 公网连通性测试地址(默认阿里云DNS)
+NOTICE_TIMEOUT: 0               # 0 => 普通通知 short；非0 => 普通通知 long
+LOW_FLOW_THRESHOLD_GB: 10.0     # 低流量告警阈值(GB)
+PING_COUNT: 10                  # 测速时发送的ping包数量
 
-MAX_RETRY: 网络连接失败重试次数
+# ==================== 功能开关 ====================
+LOG_ENABLED: true               # 是否启用日志记录(关闭后不生成日志和月度报告)
+DEBUG_MODE: false               # 调试模式(开启后生成详细错误报告)
+SPEED_TEST_ENABLED: true        # 是否启用网络测速(关闭后不检测延迟和丢包)
 
-RETRY_INTERVAL: 重试间隔(秒)
+# ==================== 网络质量告警阈值 ====================
+# 说明：阈值 <= 0 表示禁用该项判定
+NETWORK_WARN_EXTERNAL_LATENCY_MS: 200.0      # 公网延迟告警阈值(ms)
+NETWORK_WARN_EXTERNAL_LOSS_PERCENT: 10.0     # 公网丢包告警阈值(%)
+NETWORK_WARN_INTERNAL_LATENCY_MS: 200.0      # 内网延迟告警阈值(ms)
+NETWORK_WARN_INTERNAL_LOSS_PERCENT: 10.0     # 内网丢包告警阈值(%)
 
-TARGET_SSID: 校园网WiFi名称
+# ==================== 异常检测配置 ====================
+ANOMALY_MAD_MULTIPLIER: 3.0     # 异常检测中位数绝对偏差倍数
+MIN_RECORDS_FOR_ANOMALY: 3      # 异常检测所需最少记录数
+ABSOLUTE_DAILY_THRESHOLD_GB: 15.0  # 单日流量绝对阈值(超过即判定为异常)
+SAFE_DAILY_FLOOR_GB: 1.5        # 安全流量下限(低于此值不判定为异常)
 
-CAMPUS_URL: 校园网认证成功页面地址
-
-CAMPUS_HOST: 校园网服务器地址
-
-EXTERNAL_TEST_HOST: 公网连通性测试地址
-
-NOTICE_TIMEOUT: 系统通知显示时长(秒)
-
-LOW_FLOW_THRESHOLD_GB: 低流量告警阈值(GB)
-
-WORK_DIR_NAME: 工作目录名称
-
-PING_COUNT: 测速时发送的ping包数量
-
-LOG_ENABLED: 是否启用日志记录(关闭后不生成日志和月度报告)
-
-DEBUG_MODE: 调试模式(开启后生成详细错误报告，用于排查问题)
-
-SPEED_TEST_ENABLED: 是否启用网络测速(关闭后不检测延迟和丢包)
-
-ANOMALY_MAD_MULTIPLIER: 异常检测中位数绝对偏差倍数
-
-MIN_RECORDS_FOR_ANOMALY: 异常检测所需最少记录数
-
-ABSOLUTE_DAILY_THRESHOLD_GB: 单日流量绝对阈值(超过即判定为异常)
-
-SAFE_DAILY_FLOOR_GB: 安全流量下限(低于此值不判定为异常)
-
-OPEN_REPORT_AFTER_GENERATE: 生成月度报告后是否自动打开
+# ==================== 报告配置 ====================
+OPEN_REPORT_AFTER_GENERATE: true  # 生成月度报告后是否自动打开
 ```
 
 ## 问题：
-- 程序在后台静默运行，且需要等待延迟测试、开机配置等，运行时不会立即显示内容，这是正常的。如果持续超过1分钟仍未响应，请打开Debug模式排查问题。
+- 程序在后台静默运行，且需要等待延迟测试、开机配置等，运行时不会立即显示内容，这是正常的。如果持续超过30秒仍未响应，请打开Debug模式排查问题。
 - 总流量仅支持整数。若有极特殊情况（非整数总流量）可能影响程序精度。
 - 不支持Windows 7及更早系统，不支持macOS。没有支持的计划。
