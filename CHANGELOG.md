@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## v1.7.1
+
+### Fixed
+- 修复了当已用流量为0时程序无法正常运行的Bug。
+
+
 ## v1.7
 
 ### Added
