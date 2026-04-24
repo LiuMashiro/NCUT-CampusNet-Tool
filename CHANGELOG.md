@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 - 月度报告可生成直观可视化折线图。
+<img width="3032" height="1590" alt="Flow_Chart_2026-03" src="https://github.com/user-attachments/assets/fee1f4be-da3f-4df0-96ac-976ed773255f" />
+
 - 第二次流量用尽预警——1GB时将额外提醒一次流量即将用尽。
 - 实时异常流量告警——近期每日流量消耗过大时也将告警，不再需要等待次月生成月度报告。
 - 新增功能提供配置项修改。
