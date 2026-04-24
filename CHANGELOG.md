@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - 提高总流量精度。
 - 强化Debug模式。
 - 增强程序稳定性、兼容性。
+- 重构通知系统，现在通知可以保留在通知中心中。
 
 ### Other
 - 也许还增加了一些Bug？
