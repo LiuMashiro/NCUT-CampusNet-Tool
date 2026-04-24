@@ -1,4 +1,4 @@
-# 北方工业大学校园网流量助手 v1.7
+# 北方工业大学校园网流量助手 v1.7.1
 # 项目地址: https://github.com/LiuMashiro/NCUT-CampusNet-Tool
 # 适用于 NCUT-AUTO 校园网，支持流量查询、网络检测、低流量告警、月度报告生成
 
@@ -81,7 +81,7 @@ class ConfigManager:
             self.config = self.DEFAULT_CONFIG.copy()
 
     def _create_default(self) -> None:
-        config_content = """# 北方工业大学校园网流量助手 配置文件 v1.7
+        config_content = """# 北方工业大学校园网流量助手 配置文件 v1.7.1
 # 项目地址: https://github.com/LiuMashiro/NCUT-CampusNet-Tool
 # 修改此文件后重启程序生效
 # 如配置文件损坏，删除后重新运行程序将自动生成默认配置
@@ -164,7 +164,7 @@ class Logger:
             with open(report_path, "w", encoding="utf-8") as f:
                 f.write(f"=== 错误报告 ===\n")
                 f.write(f"生成时间: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-                f.write(f"程序版本: v1.7\n")
+                f.write(f"程序版本: v1.7.1\n")
                 f.write(f"Python版本: {sys.version}\n")
                 f.write(f"操作系统: Windows\n")
                 f.write(f"工作目录: {self.work_dir}\n")
@@ -529,7 +529,7 @@ class ReportGenerator:
 
         summary_content = f"=== 北方工业大学校园网月度报告 ({last_month_str}) ===\n"
         summary_content += f"生成时间: {now.strftime('%Y-%m-%d %H:%M:%S')}\n"
-        summary_content += f"程序版本: v1.7\n"
+        summary_content += f"程序版本: v1.7.1\n"
         summary_content += "----------------------------------------\n\n"
 
         report_notification_msg = ""
