@@ -51,12 +51,13 @@ v1.7已更新。
 文档 → NCUT_Campus_Network_Log
 ```
 📁 文档 /
-└─ 📁 NCUT_Campus_Network_Log          # 程序工作区
-    ├─ 📄 config.yaml                   # 程序自定义配置及说明文件
-    ├─ 📄 network_log_YYYY-MM.txt       # 当月校园网日志
-    ├─ 📄 Report_YYYY-MM.txt            # 上月月度流量统计报告（含异常流量检测分析）
-    └─ 📁 debug                         # 【调试目录】仅开启DEBUG_MODE时自动创建
-        └─ 📄 error_report_时间戳.txt    # 程序运行崩溃/抓取失败时的完整错误堆栈、环境、配置诊断日志
+└─ 📁 NCUT_Campus_Network_Log          # 程序核心工作目录
+    ├─ 📄 config.yaml                   # 全局配置文件，含各项阈值、功能开关
+    ├─ 📄 network_log_YYYY-MM.txt       # 按月生成校园网使用日志、网络质量记录
+    ├─ 📄 Report_YYYY-MM.txt            # 上月自动生成月度报告，含流量统计+异常消耗分析
+    ├─ 📄 Flow_Chart_YYYY-MM.png         # 月度流量趋势折线统计图
+    └─ 📁 debug                         # 调试目录，仅开启DEBUG_MODE自动生成
+        └─ 📄 error_report_时间戳.txt    # 异常崩溃堆栈、运行环境、配置信息诊断日志
 ```
 ## 自定义：
 通过配置文件（工作区中的config.yaml）实现自定义（默认值为推荐值）：
