@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file.
 - 增强程序稳定性、兼容性。
 - 重构通知系统，现在通知可以保留在通知中心中。
 
+### Removed
+- 由于反馈机制提速，移除了首次运行时的等待提示。
+
 ### Other
 - 也许还增加了一些Bug？
 - 预计节后更新。
