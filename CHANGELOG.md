@@ -1,12 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## Unreleased 待发布
+## v1.7
 
 ### Added
 - 月度报告可生成直观可视化折线图。
 - 第二次流量用尽预警——1GB时将额外提醒一次流量即将用尽。
 - 实时异常流量告警——近期每日流量消耗过大时也将告警，不再需要等待次月生成月度报告。
+- 新增功能提供配置项修改。
 
 ### Improved
 - 架构升级，底层优化，优化资源利用，提高规范性，提升运行效率。
@@ -20,10 +21,10 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - 由于反馈机制提速，移除了首次运行时的等待提示。
+- 不再提供工作区修改配置项。
 
 ### Other
-- 也许还增加了一些Bug？
-- 预计节后更新。
+- 也许还增加了一些Bug?
 - 爆肝！
 
 
