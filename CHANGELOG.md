@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - 强化Debug模式。
 - 增强程序稳定性、兼容性。
 - 重构通知系统，现在通知可以保留在通知中心中。
+- 优化月度报告检测异常的格式。
 
 ### Removed
 - 由于反馈机制提速，移除了首次运行时的等待提示。
