@@ -353,8 +353,7 @@ class CampusNetFetcher:
             data["used_flow_gb"] = self._parse_flow_to_gb(data["used_flow"])
             data["remain_flow_gb"] = self._parse_flow_to_gb(data["remain_flow"])
 
-            # 原逻辑保留：used和remain都>0才计算total（按用户要求，其余问题忽略）
-            if data["used_flow_gb"] > 0 and data["remain_flow_gb"] > 0:
+            if data["used_flow_gb"] >= 0 and data["remain_flow_gb"] >= 0:
                 total = data["used_flow_gb"] + data["remain_flow_gb"]
                 data["total_flow_gb"] = round(total)
 
