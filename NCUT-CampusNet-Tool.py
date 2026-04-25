@@ -1,4 +1,5 @@
 # 北方工业大学校园网流量助手 v1.7.5
+# 项目地址https://github.com/LiuMashiro/NCUT-CampusNet-Tool
 # 适用于 NCUT-AUTO 校园网，支持流量查询、网络检测、低流量告警、月度报告生成
 
 import time
@@ -98,7 +99,7 @@ PING_COUNT: 10                  # 测速时发送的ping包数量
 
 # ==================== 功能开关 ====================
 LOG_ENABLED: true               # 是否启用日志记录(关闭后不生成日志和月度报告)
-DEBUG_MODE: false               # 调试模式(开启后生成详细错误报告)
+DEBUG_MODE: false               # 调试模式(开启后生成详细错误报告，并可能固定触发错误项)
 SPEED_TEST_ENABLED: true        # 是否启用网络测速(关闭后不检测延迟和丢包)
 
 # ==================== 网络质量告警阈值 ====================
@@ -352,7 +353,6 @@ class CampusNetFetcher:
             def _attempt_default_source():
                 nonlocal driver, default_source_success
                 try:
-                    # Debug模式：强制等待31秒，确保超时触发镜像源切换
                     if self.config["DEBUG_MODE"]:
                         time.sleep(31)
                     driver = webdriver.Edge(options=edge_options)
@@ -370,15 +370,10 @@ class CampusNetFetcher:
             if not default_source_success or driver is None:
                 elapsed = time.time() - start_time
                 self.logger.append(f"系统: 默认源下载超时({elapsed:.1f}s)，切换国内镜像")
-                # 桌面通知：切换镜像源
                 self.notifier.send("🔧 Edge驱动下载", "默认源下载超时，已切换国内镜像源加速", is_warning=False)
-                
-                # 设置环境变量切换镜像源
                 os.environ["SE_CDN_URL"] = "https://registry.npmmirror.com/-/binary/chromedriver"
-                # 重新尝试初始化
                 driver = webdriver.Edge(options=edge_options)
 
-            # 原有页面抓取逻辑
             driver.set_page_load_timeout(15)
             driver.get(self.config["CAMPUS_URL"])
             wait = WebDriverWait(driver, 10)
