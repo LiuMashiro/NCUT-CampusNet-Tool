@@ -1,5 +1,4 @@
-# 北方工业大学校园网流量助手 v1.7.1
-# 项目地址: https://github.com/LiuMashiro/NCUT-CampusNet-Tool
+# 北方工业大学校园网流量助手 v1.7.5
 # 适用于 NCUT-AUTO 校园网，支持流量查询、网络检测、低流量告警、月度报告生成
 
 import time
@@ -81,7 +80,7 @@ class ConfigManager:
             self.config = self.DEFAULT_CONFIG.copy()
 
     def _create_default(self) -> None:
-        config_content = """# 北方工业大学校园网流量助手 配置文件 v1.7.1
+        config_content = """# 北方工业大学校园网流量助手 配置文件 v1.7.5
 # 项目地址: https://github.com/LiuMashiro/NCUT-CampusNet-Tool
 # 修改此文件后重启程序生效
 # 如配置文件损坏，删除后重新运行程序将自动生成默认配置
@@ -164,7 +163,7 @@ class Logger:
             with open(report_path, "w", encoding="utf-8") as f:
                 f.write(f"=== 错误报告 ===\n")
                 f.write(f"生成时间: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-                f.write(f"程序版本: v1.7.1\n")
+                f.write(f"程序版本: v1.7.5\n")
                 f.write(f"Python版本: {sys.version}\n")
                 f.write(f"操作系统: Windows\n")
                 f.write(f"工作目录: {self.work_dir}\n")
@@ -287,9 +286,23 @@ class NetworkChecker:
 
 # ===================== 校园网信息获取类 =====================
 class CampusNetFetcher:
-    def __init__(self, config: Dict, logger: Logger):
+    def __init__(self, config: Dict, logger: Logger, notifier: Notifier):
         self.config = config
         self.logger = logger
+        self.notifier = notifier
+
+    @staticmethod
+    def _is_msedgedriver_available() -> bool:
+        """检查msedgedriver是否已存在于本地缓存"""
+        cache_path = os.path.expanduser(r"~/.cache/selenium/msedgedriver")
+        if not os.path.exists(cache_path):
+            return False
+        # 遍历缓存目录，检查是否有可执行文件
+        for root, _, files in os.walk(cache_path):
+            for file in files:
+                if file.lower() == "msedgedriver.exe":
+                    return True
+        return False
 
     @staticmethod
     def _parse_flow_to_gb(flow_text: str) -> float:
@@ -332,7 +345,40 @@ class CampusNetFetcher:
         }
 
         try:
-            driver = webdriver.Edge(options=edge_options)
+            driver = None
+            default_source_success = False
+
+            # 定义默认源下载线程函数
+            def _attempt_default_source():
+                nonlocal driver, default_source_success
+                try:
+                    # Debug模式：强制等待31秒，确保超时触发镜像源切换
+                    if self.config["DEBUG_MODE"]:
+                        time.sleep(31)
+                    driver = webdriver.Edge(options=edge_options)
+                    default_source_success = True
+                except Exception:
+                    pass
+
+            # 启动线程并等待30秒
+            download_thread = threading.Thread(target=_attempt_default_source, daemon=True)
+            start_time = time.time()
+            download_thread.start()
+            download_thread.join(timeout=30)
+
+            # 判断是否需要切换镜像源
+            if not default_source_success or driver is None:
+                elapsed = time.time() - start_time
+                self.logger.append(f"系统: 默认源下载超时({elapsed:.1f}s)，切换国内镜像")
+                # 桌面通知：切换镜像源
+                self.notifier.send("🔧 Edge驱动下载", "默认源下载超时，已切换国内镜像源加速", is_warning=False)
+                
+                # 设置环境变量切换镜像源
+                os.environ["SE_CDN_URL"] = "https://registry.npmmirror.com/-/binary/chromedriver"
+                # 重新尝试初始化
+                driver = webdriver.Edge(options=edge_options)
+
+            # 原有页面抓取逻辑
             driver.set_page_load_timeout(15)
             driver.get(self.config["CAMPUS_URL"])
             wait = WebDriverWait(driver, 10)
@@ -426,7 +472,7 @@ def _setup_matplotlib_chinese_font() -> None:
             fm.fontManager.addfont(font_path)
             prop = fm.FontProperties(fname=font_path)
             font_name = prop.get_name()
-            plt.rcParams["font.family"] = "sans-serif"
+            plt.rcParams["font.font.family"] = "sans-serif"
             plt.rcParams["font.sans-serif"] = [font_name] + plt.rcParams["font.sans-serif"]
             plt.rcParams["axes.unicode_minus"] = False
         except Exception as e:
@@ -529,7 +575,7 @@ class ReportGenerator:
 
         summary_content = f"=== 北方工业大学校园网月度报告 ({last_month_str}) ===\n"
         summary_content += f"生成时间: {now.strftime('%Y-%m-%d %H:%M:%S')}\n"
-        summary_content += f"程序版本: v1.7.1\n"
+        summary_content += f"程序版本: v1.7.5\n"
         summary_content += "----------------------------------------\n\n"
 
         report_notification_msg = ""
@@ -642,7 +688,7 @@ class ReportGenerator:
                 f.write(summary_content)
             self.logger.append(
                 f"系统: 已生成 {last_month_str} 月度报告，"
-                f"异常检测结果: {'发现异常' if has_anomaly else '正常'}"
+                f"异常检测结果: {'发现异常' if has_anomaly else 'normal'}"
             )
             if self.config["OPEN_REPORT_AFTER_GENERATE"]:
                 try:
@@ -665,8 +711,9 @@ class NCUTCampusNetTool:
         self.config = self.config_manager.config
         self.logger = Logger(self.work_dir, self.config)
         self.network_checker = NetworkChecker(self.config)
-        self.fetcher = CampusNetFetcher(self.config, self.logger)
         self.notifier = Notifier(self.config)
+        # 传入通知实例，用于驱动下载提示
+        self.fetcher = CampusNetFetcher(self.config, self.logger, self.notifier)
         self.report_generator = ReportGenerator(self.work_dir, self.config, self.logger)
         self._quality = None
 
@@ -752,7 +799,16 @@ class NCUTCampusNetTool:
         return None
 
     def _background_network_test(self) -> None:
-        quality = self.network_checker.get_quality()
+        # ===================== Debug模式：强制恶劣网络 =====================
+        if self.config["DEBUG_MODE"]:
+            quality = {
+                "internal_latency": 500.0,   # 内网延迟500ms
+                "internal_loss": 50.0,        # 内网丢包50%
+                "external_latency": 800.0,    # 公网延迟800ms
+                "external_loss": 60.0         # 公网丢包60%
+            }
+        else:
+            quality = self.network_checker.get_quality()
 
         if self.config["SPEED_TEST_ENABLED"]:
             # 从配置读取告警阈值（阈值 <= 0 视为禁用该项）
