@@ -32,11 +32,13 @@ v1.7已更新。
 
 使用.exe版本(推荐）：
 - Microsoft Edge（应当自带）
+- msedgedriver（自动下载）
 
 使用.py版本:
 - Python 3
 - requirements.txt中记录的库
 - Microsoft Edge（应当自带）
+- msedgedriver（自动下载）
 
 
 ## 提示
