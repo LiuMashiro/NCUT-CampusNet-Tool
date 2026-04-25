@@ -1,7 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## v1.7.1
+## v1.8
+
+### Added
+- driver检测、提示和国内镜像源自动切换。
 
 ### Fixed
 - 修复了当已用流量为0时程序无法正常运行的Bug。
