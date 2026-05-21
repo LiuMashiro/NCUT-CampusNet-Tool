@@ -11,11 +11,14 @@ All notable changes to this project will be documented in this file.
 - 优化即时流量使用异常检测。
 - 增加流量趋势图精度至一小时。
 - 流量趋势图平滑。
+<img width="2987" height="1532" alt="Flow_Chart_2026-05" src="https://github.com/user-attachments/assets/846ccab0-e9d3-4473-87f7-6150bb68dade" />
+
 - 优化流量异常警告语。
 
 ### Fixed
 - 修复报告图生成中可能的字体问题。
 - 修复Driver镜像源问题。
+
 
 
 ## v1.7.5
