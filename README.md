@@ -12,7 +12,7 @@
 
 全程静默无需手动操作。
 
-v1.7.5已更新。
+v1.7.6已更新。
 
 
 ## 三步快速使用
@@ -64,6 +64,9 @@ v1.7.5已更新。
 ## 自定义：
 通过配置文件（工作区中的config.yaml）实现自定义（默认值为推荐值）：
 ```
+# 修改此文件后重启程序生效
+# 如配置文件损坏，删除后重新运行程序将自动生成默认配置
+
 # ==================== 基础配置 ====================
 MAX_RETRY: 5                    # 网络连接失败重试次数
 RETRY_INTERVAL: 3               # 重试间隔(秒)
@@ -77,7 +80,7 @@ PING_COUNT: 10                  # 测速时发送的ping包数量
 
 # ==================== 功能开关 ====================
 LOG_ENABLED: true               # 是否启用日志记录(关闭后不生成日志和月度报告)
-DEBUG_MODE: false               # 调试模式(开启后生成详细错误报告)
+DEBUG_MODE: false               # 调试模式(开启后生成详细错误报告，并可能固定触发错误项)
 SPEED_TEST_ENABLED: true        # 是否启用网络测速(关闭后不检测延迟和丢包)
 
 # ==================== 网络质量告警阈值 ====================
@@ -87,14 +90,19 @@ NETWORK_WARN_EXTERNAL_LOSS_PERCENT: 10.0     # 公网丢包告警阈值(%)
 NETWORK_WARN_INTERNAL_LATENCY_MS: 200.0      # 内网延迟告警阈值(ms)
 NETWORK_WARN_INTERNAL_LOSS_PERCENT: 10.0     # 内网丢包告警阈值(%)
 
-# ==================== 异常检测配置 ====================
-ANOMALY_MAD_MULTIPLIER: 3.0     # 异常检测中位数绝对偏差倍数
+# ==================== 异常检测配置 (v1.7.6 放宽) ====================
+ANOMALY_MAD_MULTIPLIER: 4.0     # 异常检测中位数绝对偏差倍数
 MIN_RECORDS_FOR_ANOMALY: 3      # 异常检测所需最少记录数
-ABSOLUTE_DAILY_THRESHOLD_GB: 15.0  # 单日流量绝对阈值(超过即判定为异常)
-SAFE_DAILY_FLOOR_GB: 1.5        # 安全流量下限(低于此值不判定为异常)
+ABSOLUTE_DAILY_THRESHOLD_GB: 20.0  # 单日流量绝对阈值(超过即标记为疑似异常)
+SAFE_DAILY_FLOOR_GB: 3.0        # 安全流量下限(低于此值不判定为疑似异常)
 
 # ==================== 报告配置 ====================
 OPEN_REPORT_AFTER_GENERATE: true  # 生成月度报告后是否自动打开
+
+# ==================== 报告强制生成配置 ====================
+# 提示：将其改为 true 并运行一次后，程序会自动生成对应报告并将其复位为 false
+FORCE_GENERATE_LAST_MONTH_REPORT: false  # 强制生成上月报告
+FORCE_GENERATE_THIS_MONTH_REPORT: false  # 强制生成本月报告
 ```
 
 ## 问题：
