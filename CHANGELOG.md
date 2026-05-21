@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## v1.7.6
+### Added
+- 增加能强制生成次月或本月报告的配置项，提前看报告。
+
+### Fixed
+- 修复报告图生成中可能的问题。
+- 修复Driver镜像源问题。
+
+
 ## v1.7.5
 
 ### Added
